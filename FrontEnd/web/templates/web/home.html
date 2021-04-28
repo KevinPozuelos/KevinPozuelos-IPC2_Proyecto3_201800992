@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/solar/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+</head>
+<body style="background-color:#070707;">
+    <h1 style="color:#ffffff;">Bienvenido</h1>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <!--Izquierda-->
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+
+                      <label class="custom-file-label" for="inputGroupFile01">Cargar archivo XML</label>
+                      <input type="file" class="custom-file-input" id="subirArchivo" accept=".xml">
+                    </div>
+                </div>
+
+            </div>
+            <!--Derecha-->
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary">Peticiones</button>
+                <button type="button" class="btn btn-info">Ayuda</button>
+            </div>
+        </div>
+        <!--Procesamiento XML-->
+        <script>
+            function cargarXML(evento){
+                let archivo = evento.target.files[0];    // se coloca 0 porque el file puede seleccionar archivos mutiples
+                if (archivo){                           //Si hay un objeto en la variable entonces
+                    let leer = new FileReader();        //Se crea un objeto filereader
+                    leer.onload = function(e){          //Si el objeto realiza una carga llama a la función progeso
+                        let contenido = e.target.result;//el resultado de la carga se asigna a la variable
+                        document.getElementById('contenidoXML').innerHTML = contenido;
+                    };
+                    leer.readAsText(archivo);           //El fileReader será de tipo texto
+                }else{
+                    alert('No se pudo cargar...')
+                }
+            }
+            //evento oyente al cargar la página y llama a la función cuando cambie el type file
+            window.addEventListener('load', () =>{
+                document.getElementById('subirArchivo').addEventListener('change', cargarXML);
+            });
+        </script>
+
+        <hr style="border-color: rgb(53, 158, 158);">   <!--Línea horizontal con color blanco-->
+
+        <div class="row">
+            <!--Izquierda-->
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary">Enviar</button>
+                <h3>Entrada</h3>
+                <textarea id="contenidoXML" rows="18" cols="60" style="background-color:rgb(240, 243, 245)" disabled></textarea>
+            </div>
+            <!--Derecha-->
+            <div class="col-md-6">
+                <button type="button" class="btn btn-secondary">Reset</button>
+                <h3>Salida</h3>
+                <textarea rows="18" cols="60" style="background-color:rgb(240, 243, 245)" disabled></textarea>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
