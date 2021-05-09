@@ -1,33 +1,59 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from regex import ParserXML
-
+from regex import RegexXML
+from Consulta import Consulta
 app = Flask(__name__)
 CORS(app)
+DateArray = []
+XML = RegexXML()
+handler = Consulta
 
-xml = ParserXML()
-
-@app.route("/")
-def helloWorld():
-  return "Hello, cross-origin-world!"
   
-@app.route('/parsearXML', methods=['POST'])
-def Parsear():
-      dato = request.json['xml']
-      dato = dato.split("\n")
-      xml.eDatos(dato)
-      r = jsonify({"msj":"ARCHIVO XML PROCESADO"})
-      return r
+@app.route('/AlmacenarXML', methods=['POST'])
+def GuardarXML():
+    
+    archivo=request.json['XMLdatos']
+    archivo=archivo.split("\n")
 
-@app.route('/salida', methods=['GET'])
-def crearSalida():
-      with open("Estadisticas.xml") as archivo:
-        linea = archivo.readlines()
-        r = jsonify({"mensaje":linea})
-        return r
+    global DateArray
+    DateArray=XML.Parserxml(archivo)
+    respuesta=jsonify({"mensaje":"Estadisticas.xml, guardado"})
+    return respuesta
 
+@app.route('/ListaFechas', methods=['GET'])
+def ListaComboBox():
+    temporalFechas1=DateArray[0]
+    temporalFechas2=DateArray[1]
+    fechas=[]
+    siguiente=0
+    for elemento in temporalFechas1:
+        if siguiente == len(temporalFechas1):
+            break
+        fechas.append(temporalFechas1[siguiente])
+        siguiente+=5
 
+    siguiente=0
+    for elemento in temporalFechas2:
+        fechas.append(elemento[1])
+    
+    respuesta=jsonify({"ListaFechas":fechas})
+    return respuesta
+
+@app.route('/CargarXMLsalida', methods=['GET'])
+def CargarXMLsalida():
+    with open("Estadistica.xml") as archivo:
+        lineas=archivo.readlines()
+    respuesta=jsonify({"mensaje":lineas})
+    return respuesta
+
+@app.route('/Codigo/<string:Busqueda>', methods=['GET'])
+def ConsultarCodigo(busqueda):
+
+    resultado=handler.ConsultaCodigo(DateArray, busqueda)
+    respuesta=jsonify({"mensaje":resultado})
+    
+    return respuestap
 
 
 if __name__ =='__main__':
-    app.run(debug=True, port=400)
+    app.run(debug=True, port=4000)

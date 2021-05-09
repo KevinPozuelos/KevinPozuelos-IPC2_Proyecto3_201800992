@@ -10,7 +10,7 @@
     <div class="container-md">
         
     <div><br    >
-        <input type="file" id="file" class="p-3 mb-2 bg-dark text-white">
+        <input type="file" id="fileXML" class="p-3 mb-2 bg-dark text-white">
         <button id="Ventana_Peticiones" onclick="Peticiones()" type="button" class="btn btn-primary" disabled>Peticiones</button>
         <button type="button" class="btn btn-info">Ayuda</button>
         <button id="enviarCargado" onclick="EnviarProceso()" type="button" class="btn btn-success" disabled>Enviar</button>
@@ -25,100 +25,93 @@
              
             <tr>
                 <td>
-                    <textarea id="entrada"  cols="100" rows="25" disabled></textarea>
+                    <textarea id="MostrarXML_entrada"  cols="100" rows="25" disabled></textarea>
                 </td>
             </tr>
         </table>
     </div>
 </div>
       
- <script>
-        function AbrirArchivo(evento){
-            let archivo = evento.target.files[0];
+<script>
+    function AbrirArchivo(evento){
+        let archivo = evento.target.files[0];
 
-            if(archivo){
-                let reader = new FileReader();
-                reader.onload= function(e){
-                    let contenido=e.target.result;
-                    document.getElementById('entrada').innerHTML=contenido;
-                    Almacenado_MemoriaNav=contenido;
-                    sessionStorage.setItem("Para_Mostar_XML",Almacenado_MemoriaNav)
-                    document.getElementById("file").disabled=true;
-                    document.getElementById("enviarCargado").disabled=false;
-                    console.log(archivo);
-                };
+        if(archivo){
+            let reader = new FileReader();
+            reader.onload= function(e){
+                let contenido=e.target.result;
+                document.getElementById('MostrarXML_entrada').innerHTML=contenido;
+                Almacenado_MemoriaNav=contenido;
+                sessionStorage.setItem("Para_Mostar_XML",Almacenado_MemoriaNav)
+                document.getElementById("fileXML").disabled=true;
+                document.getElementById("enviarCargado").disabled=false;
+                console.log(archivo);
+            };
 
-                reader.readAsText(archivo);
+            reader.readAsText(archivo);
 
-            }else{
-                console.log('No se selecciono Archivo');
-            }
+        }else{
+            console.log('No se selecciono Archivo');
         }
+    }
 
 
-        window.addEventListener('load', () => {
-            document.getElementById('file').addEventListener('change',AbrirArchivo);
-        });
+    window.addEventListener('load', () => {
+        document.getElementById('fileXML').addEventListener('change',AbrirArchivo);
+    });
 
 
-        function Cargar_Almacenado(){
-            var MostrarXMLEntrada = document.querySelector('#MostrarXML_entrada')
-            try{
-                var Almacenado_MemoriaNav = sessionStorage.Para_Mostar_XML
-                console.log(Almacenado_MemoriaNav)
-                
-                if(Almacenado_MemoriaNav != "" && Almacenado_MemoriaNav != undefined){     
-                    MostrarXMLEntrada.innerHTML=Almacenado_MemoriaNav
-                    document.getElementById("file").disabled=true;
-                    document.getElementById("Ventana_Peticiones").disabled=false;
-                }
+    function Cargar_Almacenado(){
+        var MostrarXMLEntrada = document.querySelector('#MostrarXML_entrada')
+        try{
+            var Almacenado_MemoriaNav = sessionStorage.Para_Mostar_XML
+            console.log(Almacenado_MemoriaNav)
             
-            }catch(error){console.log("error en funcion: Cargar_Almacenado")}
-        }
-
-
-        function Peticiones(){
-            location.href="http://localhost:8000/peticion"    //Permite cambiar hacia la ventana de -Vista_Peticiones-
-        }
-
-
-        function EnviarProceso(){
-            document.getElementById("enviarCargado").disabled=true;
-            document.getElementById("Ventana_Peticiones").disabled=false;
-            var DatosArchivoXMLCargado = sessionStorage.Para_Mostar_XML
-            var objetoDatosXML= {
-                'XMLdatos':DatosArchivoXMLCargado
+            if(Almacenado_MemoriaNav != "" && Almacenado_MemoriaNav != undefined){     
+                MostrarXMLEntrada.innerHTML=Almacenado_MemoriaNav
+                document.getElementById("fileXML").disabled=true;
+                document.getElementById("Ventana_Peticiones").disabled=false;
             }
-
-            fetch('http://localhost:4000/AlmacenarXML', {
-                method: 'POST',
-                body: JSON.stringify(objetoDatosXML),
-                headers:{
-                    'Content-Type':'application/json'
-                }
-            }).then(response => response.json())
-            .catch(error =>{
-                console.log(error)
-            })
-            .then(res =>{
-                console.log('!!todo correcto!!')
-                alert("!! Datos enviados exitosamente !!")
-            })
-        }
-
-
-        function Reiniciar(){
-            sessionStorage.setItem("Para_Mostar_XML","")
-            location.href="http://localhost:8000/"
-        }
-        /*
-        como se esta utilizando django, se debe enviar la ventana a abrir, de la forma anterior, y no
-        olvidar que tambien se debe agregar la funcion en views y agregar la ruta en urls
         
-        Ya que se esta utilizando un framework para Front-end no se puede cambiar entre ventanas de la siguiente
-        forma: location.href="index.html"
-        */
-    </script>                                                   
+        }catch(error){console.log("error en funcion: Cargar_Almacenado")}
+    }
+
+
+    function Peticiones(){
+        location.href="http://localhost:8000/peticion"    
+    }
+
+
+    function EnviarProceso(){
+        document.getElementById("enviarCargado").disabled=true;
+        document.getElementById("Ventana_Peticiones").disabled=false;
+        var DatosArchivoXMLCargado = sessionStorage.Para_Mostar_XML
+        var objetoDatosXML= {
+            'XMLdatos':DatosArchivoXMLCargado
+        }
+
+        fetch('http://localhost:4000/AlmacenarXML', {
+            method: 'POST',
+            body: JSON.stringify(objetoDatosXML),
+            headers:{
+                'Content-Type':'application/json'
+            }
+        }).then(response => response.json())
+        .catch(error =>{
+            console.log(error)
+        })
+        .then(res =>{
+            console.log('!!todo correcto!!')
+            alert("!! Datos enviados exitosamente !!")
+        })
+    }
+
+
+    function Reiniciar(){
+        sessionStorage.setItem("Para_Mostar_XML","")
+        location.href="http://localhost:8000/"
+    }                                         
+</script>
 
 </body>
 </html>

@@ -1,100 +1,168 @@
 from Estadistica import Estadistica
-salida = Estadistica()
-class funneling(object):
 
-    def Ordenar(self, listaD):
+Salida= Estadistica()
+
+class Funnling:
+    
+    def FunellingData(self, datafunnel):
         
-        fecha= []
-        DifFecha= []
-        DatoFecha= []
-        comparar = ""
-        pos = 1
-        sig = 1
-        listaFecha= []
+        date=[]
+        dateDif= []
+        dataF= []   
+        auxdate= ""
+        pos= 1
+        sig= 1
+        arrayDate=[]    
+        DateArray=[]
 
-        Registro= []     
-        tReporte= 0 
-        cRegistro= []     
-        afectado= []      
-        DatoF=[]  
-        rComparar= ""
-        cComparar= ""
+        
+        for parsedate in datafunnel: 
+            auxE=False
 
-##################################################################
-        for eFecha in listD:
-            aux = False
-            comparar = eFecha[1]
 
-            if listaFecha != []:
-                for fecha in listaFecha:
-                    if comparar == fecha:
-                        aux = True
-                        break
-                    
-                    
-            if aux == False:
-                for i in listaD:
-                    if pos == len(listaD):
+            if arrayDate != []:
+                for DateF in arrayDate:
+                    if auxdate == DateF:
+                        auxE=True
                         break
 
-                    elif listaD[pos][1] == comparar:
-                        fecha.append(listaD[pos])
-                    pos+= 1
+            
+            if auxE == False:
+                for i in datafunnel:
+                    if pos == len(datafunnel):
+                        break
 
-                if fecha == []:
-                    DifFecha.append(eFecha)
+                        #pos. fecha de un dato
+                    elif datafunnel[pos][1] == auxdate:
+                        date.append(datafunnel[pos])
+
+                    pos+=1
+                
+                if date == []:
+                    dateDif.append(parsedate) 
+                
                 else:
-                    fecha.insert(0, eFecha)
-                    DatoFecha.append(fecha)
-                    fecha = []
-                    listaFecha.append(comparar)
-            sig+= 1
-            pos = sig
-####################################################################        
-        for lFecha in DatoFecha:
-            print("Fecha: "+str(lFecha[0][1]))
-            for dato in lFecha:
-                print(dato)
-####################################################################
-        for dato in DifFecha:
-            print(dato)
-####################################################################            
-        for lFecha in DatoF:
-            for lista in lFecha:
-                bRep = False
-                bCod = False
-                rComparar= lista[2]
-                cComparar= lista[4]
+                    date.insert(0,parsedate)
+                    dataF.append(date)
+                    date=[]
+                    arrayDate.append(auxdate)
 
-                if rComparar= ![]:
-                    aux = 0
-                    for i in rComparar:
-                        if aux == len(cRegistro):
-                            break
-                        if cComparar == cRegistro[aux]:
-                            cRegistro[aux+1] = cRegistro[aux+1]+1
-                            bCod = True
-                            break
-                        aux+= 2
-                
-                if bRep == False:
-                    Registro.append(rComparar)
-                    Registro.append(1)
-                    tReporte+= 1
-                
-                if bCod == False:
-                    cRegistro.append(cComparar)
-                    cRegistro.append(1)
-                
-                afectado.append(lista[3])
+            sig+=1
+            pos=sig
+            
+        print("---------OUT-CONSOLE---------")
+        print("---------Salida: Fechas---------")
+        print("----Fechas Iguales----")
+        for datadate in dataF:
+            print("Fecha: "+ str(datadate[0][1]))
+            for line in datadate:
+                print(line)
 
-            DatoF.append(lista[1])
-            DatoF.append(tReporte)
-            DatoF.append(Registro)
-            DatoF.append(cRegistro)  
-            DatoF.append(afectado)  
- 
+        print("\n----------------------------------------------------")
+        print("----Fechas distintas----")
+        for line in dateDif:
+            print(line)
+            print("<<<><<><<<<<<>>>>>><>><>>>")
 
-        salida.XMLsalida(DatoF,DifFecha)
+
+        
+
+
+        
+        print("---------------------------------")
+        print("-----TEST FUNNEL------")
+        registroReportes=[]     
+        contReportes=0
+        Nreg=[]
+        implicados=[]     
+        FunnelDate=[]
+        auxReportE=""
+        auxCode=""
+
         
         
+
+        
+        for arrayDate2 in dataF:
+            for arrayData in arrayDate2:
+                auxrepo=False
+                auxcode2=False
+                auxReportE= arrayData[2]
+                auxCode= arrayData[4]
+
+                if registroReportes != []:
+                    verificador=0
+                    for i in registroReportes:
+                        if verificador == len(registroReportes):
+                            break
+                        if auxReportE == registroReportes[verificador]:
+                            ReportadorRegistrado[verificador+1]=registroReportes[verificador+1]+1
+                            auxrepo=True
+                            contReportes+=1
+                            break
+
+                        verificador+=2
+                
+                if Nreg != []:
+                    verificador=0
+                    for i in Nreg:
+                        if verificador == len(Nreg):
+                            break
+                        if auxCode == Nreg[verificador]:
+                            Nreg[verificador+1]=Nreg[verificador+1]+1
+                            auxcode2=True
+                            break
+
+                        verificador+=2
+            
+                if auxrepo == False:
+                    registroReportes.append(auxReportE)
+                    registroReportes.append(1)
+                    contReportes+=1
+
+                if auxcode2 == False:
+                    Nreg.append(auxCode)
+                    Nreg.append(1)
+
+                implicados.append(arrayData[3]) 
+            
+            FunnelDate.append(arrayData[1])   
+            FunnelDate.append(contReportes)   
+            FunnelDate.append(registroReportes) 
+            FunnelDate.append(Nreg)         
+            FunnelDate.append(implicados)   
+            
+
+            
+            print("------------------------")
+            print(arrayData[1])
+            print(contReportes)
+            print(registroReportes)
+            print(Nreg)
+            print("--afectados--")
+            for d in implicados:
+                print(d)
+
+            
+            registroReportes=[]
+            Nreg=[]
+            implicados=[]
+            contReportes=0
+        
+        
+        print("------------------------")
+        print("--DISTINTA FECHA----")
+        for dato in dateDif:
+            print(dato[1])
+            print(1)
+            print(dato[2])
+            print(dato[4])
+            print("--afectados--")
+            print(dato[3])
+            print("-----------------")
+
+        print(">>>>>>>>>>>FINALIZO FILTRACION<<<<<<<<<<")
+        Salida.Parsear(FunnelDate,dateDif)
+        DateArray.append(FunnelDate)
+        DateArray.append(dateDif)
+        return DateArray

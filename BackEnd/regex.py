@@ -1,77 +1,93 @@
-from Funnel import funneling
 import re
+from Funnel import Funnling
 
-funnel = funneling()
+funneldata=Funnling()
 
-class ParserXML(object):
+class RegexXML:
 
-    def eDatos(self, lDatos):
-        Dato=[]
-        Evento=[] 
-        Indice=1
-        MensajeE=""
-        lineas= lDatos
-        cont=1
-    try:    
-        for linea in lineas:
-            if "<EVENTO>" in linea:
-                Evento.append(str(Indice))
-                Indice+= 1
-                cont= 1
-            elif "<EVENTOS>" not in linea and "</EVENTOS>" not in linea:
-                linea= re.sub("\t","",linea) 
-                linea= re.sub("<","",linea)
-                linea= re.sub(">","",linea)
-                linea= re.sub('"',"",linea)
-                
-                if cont == 1:
-                    fecha = re.search(r'[0-9|/]+', linea) #expresion regular para las fechas
-                    if fecha != None:
-                        Evento.append(fecha.group())
-                    else:
-                        print("FECHA INVALIDA")
+    def Parserxml(self, data):
+        try:
+            aidate=[]
+            hashT= [] 
+            index= 1
+            msjE= ""
+            archivo= data
 
-                elif cont == 2:
-                    report = re.search(r'([\w\.]+)@([\w\.]+)(\.[\w\.]+)', linea) #Expresion regular para los Correos que notifican error
-                    if report != None:
-                        Evento.append(report.group())
-                    else:
-                        print("FORMATO DE CORREO INVALIDO")
-                
-                elif cont == 3:
-                    afectado = re.findall(r'([\w\.]+@[\w\.]+\.[\w\.]+)', linea) #Expresion regular para los correos que presentan el problema
-                    if afectado != None:
-                        Evento.append(afectado)
+            state= 1
+            
+
+            for part in archivo:
+                if "<EVENTO>" in part:
+                    hashT.append(str(index))
+                    index+= 1
+                    state= 1
+                    auxVal= False
+                elif "<EVENTOS>" not in part and "</EVENTO>" not in part  and "</EVENTOS>" not in part:
+                    
+                    part= re.sub("\t", "", part) 
+                    part= re.sub("<" ,"", part)
+                    part= re.sub(">", "", part)
+                    part= re.sub('"', "", part)
+
+                    if "Guatemala" in part:
+                        scandate= re.search(r'[0-9|/]+', part)  #obtiene las fechas de (0-9)(0-9)/(0-9)(0-9)/(0-9)(0-9)
+                        if scandate != None:
+                            hashT.append(scandate.group())
                         else:
-                            print("NO SE AGREGO CORREO DE AFECTADO")
+                            print("NO SE AGREGO FECHA")
+                    
 
-                elif cont == 4:
-                    CodigoE = re.search(r'([0-9]{5,5})', linea) #Expresion regular para el codigo del error
-                    mError = re.search(r'(-.+(\w)+)', linea)#Expresion regular para la descripcion del error
-                    if CodigoE != None:
-                        Evento.append(CodigoE.group())
-                    else:
-                        print("NO SE AGREGO CODIGO")
-                    if mError != None:
-                        MensajeE += mError.group()
-                    else:
-                        print("No agrega descripcion del error")
-
-                elif cont > 4:
-                    mError2 = re.search(r'(\w.+)+', linea)#Expresion regular de las lineas de la descripcion de errores
-                    if mError2 != None:
-                        MensajeE += mError2.group()
-                    else:
-                        print("no agrega descripcion erroor")
-                
-                cont+=1
-            elif "</EVENTO>" in linea:
-                Evento.append(MensajeE)
-                Dato.append(Evento)
-                MensajeE = ''
-                Evento = []
-        funnel.Ordenar(Dato)
-    except FileNotFoundError:
-        print("NO SE ENCONTRO ARCHIVO")
-
+                    elif "Reportado por" in part:
+                        scannreport=re.search(r'([\w\.]+)@([\w\.]+)(\.[\w\.]+)',part)   #Obtiene correo de quien reporta
+                        if scannreport != None:
+                            hashT.append(scannreport.group())
+                        else:
+                            print("NO SE AGREGO AL REPORTADOR")
+                         
                         
+                    elif "Usuarios afectados" in part:
+                        scacafecct=re.findall(r'([\w\.]+@[\w\.]+\.[\w\.]+)', part)   #Obtiene Correos de los afectados
+                        if scacafecct != None:
+                            hashT.append(scacafecct)
+                        else:
+                            print("NO SE AGREGO AFECTADO")
+
+
+                    elif "Error" in part:
+                        scanerror= re.search(r'([0-9]{5,5})', part)   #Obtiene Numero de error
+                        scanmsjerror= re.search(r'(-.+(\w)+)', part)   #Obtiene descripcion de error
+                        if scanerror != None:
+                            hashT.append(scanerror.group())
+                        else:
+                            print("NO HAY ERROR")
+
+                        if scanmsjerror != None:
+                            msjE+=scanmsjerror.group() + " "
+                            auxVal = True
+                            
+                        else:
+                            print("ERROR DESCONOCIDO NO SE AGREGA-")
+
+
+                    elif auxVal==True:
+                        scanmsjerror=re.search(r'(\w.+)+', part)   #Obtiene siguientes lineas de descripcion de error
+                        if scanmsjerror != None:
+                            msjE+=scanmsjerror.group()
+                        else:
+                            print("NO SE AGREGO ERROR DESCONOCIDO")
+                    
+                    auxVal=False
+
+                elif "</EVENTO>" in part:
+                    hashT.append(msjE)
+                    aidate.append(hashT)
+                    msjE=""
+                    hashT=[]
+                    
+
+                    
+                  
+            return funneldata.FunellingData(aidate)
+
+        except FileNotFoundError:
+            print("\n--------NO SE ENCONTRO ARCHIVO----------\n")
