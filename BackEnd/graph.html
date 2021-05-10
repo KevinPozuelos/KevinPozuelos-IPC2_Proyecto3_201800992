@@ -1,50 +1,9 @@
-import os
-class Consulta:
-
-    def ConsultaCodigo(self, DateArray, busqueda):
-        auxLista = DateArray
-        Codigo = busqueda
-        datos = []
-        contenido=''
-        DatoA = auxLista[0]
-        DatosB = auxLista[1]
-        sig = 0
-        derecha = 3
-
-        for i in range(len(DatoA)):
-            if derecha >= len(DatoA):
-                break
-            codeSig = 0
-            CodigoL = DatoA[derecha]
-            for i  in range(len(CodigoL)):
-                if codeSig == len(CodigoL):
-                    break
-                if CodigoL[codeSig]==Codigo:
-                    datos.append(DatoA[sig])
-                    datos.append(str(CodigoL[codeSig+1]))
-                codeSig +=2
-            sig += 5
-            derecha += 5
-        sig = 1
-        derecha = 1
-
-
-        for j in range(len(DatosB)):
-            if derecha ==len(DatosB):
-                break
-            auxdatos = DatosB[derecha]
-            if auxdatos[4]==Codigo:
-                datos.append(auxdatos[sig])
-                datos.append("1")
-            derecha +=1     
-        if datos != []:
-            grafico= open("graph.html","w")
-            grafico.write("""<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gr√°fico de barras"""+Codigo+"""</title>
+    <title>Gr·fico de barras20003</title>
  
     <style>
     .chart-wrap {
@@ -66,7 +25,7 @@ class Consulta:
         white-space:nowrap;
     }
  
-    /* cuando definimos el gr√°fico en horizontal, lo giramos 90 grados */
+    /* cuando definimos el gr·fico en horizontal, lo giramos 90 grados */
     .chart-wrap.horizontal .grid{
         transform:rotate(-90deg);
     }
@@ -87,7 +46,7 @@ class Consulta:
         border-left:2px solid var(--grid-color);
     }
  
-    /* posicionamos el % del gr√°fico*/
+    /* posicionamos el % del gr·fico*/
     .chart-wrap .grid::before{
         font-size:0.8em;
         font-weight:bold;
@@ -137,25 +96,8 @@ class Consulta:
 <div class="chart-wrap horizontal"> <!-- quitar el estilo "horizontal" para visualizar verticalmente -->
   <div class="title">ESTADISTICA</div>
  
-  <div class="grid">""")
-            
-            siguiente=0
-            for i in datos:
-                if siguiente == len(datos):
-                    break
-                contenido+=("""<div class="bar" style="--bar-value:"""+ str((int(datos[siguiente+1])) ) +"%"+ """;" data-name="""+ datos[siguiente] + """ title="""+datos[siguiente]+ str((int(datos[siguiente+1])) )+"%"+"""></div>""")
-                
-                siguiente+=2
-            grafico.write(contenido)
-            grafico.write("""</div>
+  <div class="grid"><div class="bar" style="--bar-value:1%;" data-name=25/04/2021 title=25/04/20211%></div><div class="bar" style="--bar-value:1%;" data-name=20/04/2021 title=20/04/20211%></div><div class="bar" style="--bar-value:1%;" data-name=30/04/2021 title=30/04/20211%></div><div class="bar" style="--bar-value:1%;" data-name=25/04/2021 title=25/04/20211%></div><div class="bar" style="--bar-value:1%;" data-name=25/04/2021 title=25/04/20211%></div><div class="bar" style="--bar-value:1%;" data-name=30/04/2021 title=30/04/20211%></div></div>
 </div>
  
 </body>
-</html> """)
-            os.startfile("graph.html")
-            repuesta = "COMPLETADO"
-            return repuesta
-        else:
-            repuesta="!! Codigo no existente !!"
-            return repuesta
-        
+</html> 

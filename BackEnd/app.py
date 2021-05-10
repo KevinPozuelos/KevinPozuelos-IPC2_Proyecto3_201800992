@@ -2,11 +2,13 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from regex import RegexXML
 from Consulta import Consulta
+from documentacion import documentacion
 app = Flask(__name__)
 CORS(app)
 DateArray = []
 XML = RegexXML()
-handler = Consulta
+handler = Consulta()
+docu = documentacion()
 
   
 @app.route('/AlmacenarXML', methods=['POST'])
@@ -47,13 +49,19 @@ def CargarXMLsalida():
     return respuesta
 
 @app.route('/Codigo/<string:Busqueda>', methods=['GET'])
-def ConsultarCodigo(busqueda):
+def ConsultarCodigo(Busqueda):
 
-    resultado=handler.ConsultaCodigo(DateArray, busqueda)
+    resultado=handler.ConsultaCodigo(DateArray, Busqueda)
     respuesta=jsonify({"mensaje":resultado})
     
-    return respuestap
+    return respuesta
 
+app.route('/documentacion', methods=['GET'])
+def Documentacion():
+    docu.abrirdocumetacion()
+    respuesta=jsonify({'mensaje':'Documentacion.pdf'})
+
+    
 
 if __name__ =='__main__':
     app.run(debug=True, port=4000)

@@ -18,13 +18,13 @@
                 <table class="Filtracion">
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         <label class="btn btn-secondary active">
-                          <input type="radio" name="Fecha" id="ConFecha" autocomplete="off" checked> Fecha
+                          <input type="button" name="Fecha" id="ConFecha"> Fecha
                         </label>
                         <label class="btn btn-secondary">
-                          <input type="radio" name="CodigoError" id="CodeSearch" autocomplete="off"> Codigo de Error
+                          <input onclick="OrdenarPorCodigoError()" type="button" name="CodigoError" id="CodeSearch"  > Codigo de Error
                         </label>
                         <label class="btn btn-secondary">
-                          <input type="radio" name="Filtrar" id="Filtrar" autocomplete="off"> Filtrar
+                          <input onclick="EnviarOrden()" type="button" name="Filtrar" id="Filtrar"  > Filtrar
                         </label>
                       </div>
                       <tr>
@@ -91,25 +91,42 @@
                     }
                 })
             }
-
-            function consultaDato(){
-                document.getElementById("Codigo")
-                if (auxCode==true){
-                    if (document.getElementById("Codigo").value == ""){
-                        alert("No ingreso codigo o ingreso un codigo incorrecto")
-
-                    }else{
-                        alert("Busqueda exitos");
-                        ConsultaCOdigo();
-                    }
+            
+            function OrdenarPorCodigoError(){
+                document.getElementById("Filtrar");
+                document.getElementById("Codigo");
                 
+    
+                document.getElementById("Codigo").value="";
+                flagCodigo=true;
+                
+            }
+            
+            function EnviarOrden(){
+                
+                document.getElementById("Codigo");
+                document.getElementById("Filtrar");
+    
+                if (flagCodigo == true){
+                    if (document.getElementById("Codigo").value == ""){
+                        alert("!! Debe Ingresar un Codigo de Error !!")
+                    }else{
+                        alert("!! Filtración por codigo enviada !! --ESPERE UN MOMENTO--");
+                        ObtenerValorCodigo();
+                        
+                    }
+                }else{
+                    alert("!! Filtración por fecha enviada !! --ESPERE UN MOMENTO--");
+                    ObtenerValorFecha();
+                    
                 }
+                
             }
 
-            function ConsultaCOdigo(){
+            function ObtenerValorCodigo(){
                 var areaCodigoError = document.getElementById("Codigo").value;
                 
-                fetch(`http://localhost:4000/OrdenarCodigo/${areaCodigoError}`)    // utilizar( ` ), ese simbolo cuando se necesite enviar un dato por la ruta.
+                fetch(`http://localhost:4000/Codigo/${areaCodigoError}`)    
                 .then(response => response.json())
                 .catch(error => {
                     alert("ocurrio un error, verifiar consola !!");

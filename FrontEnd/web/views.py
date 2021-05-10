@@ -6,4 +6,7 @@ def home(request):
 
 def Peticion(request):
     return render(request, 'web/Peticion.html')
+
+def dato(request):
+    return render(request, 'web/index.html')
     
